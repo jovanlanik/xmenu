@@ -1,4 +1,8 @@
-#define PROGNAME "xmenu"
+#include "config.h"
+
+#define XMENU_STR(x) #x
+#define XMENU_GETNAME(x) XMENU_STR(x)
+#define PROGNAME XMENU_GETNAME(NAME)
 
 /* Actions for the main loop */
 #define ACTION_NOP    0
@@ -31,8 +35,9 @@ enum {ColorFG, ColorBG, ColorLast};
 enum {NetWMName, NetWMWindowType, NetWMWindowTypePopupMenu, NetLast};
 
 /* configuration structure */
+#define OPTION(type, name, def, fn) type name;
 struct Config {
-	/* the values below are set by config.h */
+	/*
 	const char *font;
 	const char *background_color;
 	const char *foreground_color;
@@ -50,14 +55,48 @@ struct Config {
 	int iconpadding;
 	int horzpadding;
 	int alignment;
+	*/
+	OPTION_LIST
 
-	/* the values below are set by options */
+	// the values below are set by options 
 	int monitor;
-	int posx, posy;         /* rootmenu position */
+	int posx, posy;
 
-	/* the value below is computed by xmenu */
+	// the value below is computed by xmenu
 	int iconsize;
 };
+#undef OPTION
+
+#define OPTION(type, name, def, fn) .name = def,
+static struct Config config = {
+	/*
+	.font = "monospace:size=9",
+
+	.background_color = "#FFFFFF",
+	.foreground_color = "#000000",
+	.selbackground_color = "#000000",
+	.selforeground_color = "#FFFFFF",
+	.separator_color = "#000000",
+	.border_color = "#000000",
+
+	.width_pixels = 124,
+	.height_pixels = 24, 
+	.border_pixels = 1,
+	.separator_pixels = 1,
+	.gap_pixels = 0,
+
+	.alignment = LeftAlignment,
+
+	.triangle_width = 4,
+	.triangle_height = 8,
+
+	.iconpadding = 4,
+
+	.horzpadding = 4,
+	*/
+	OPTION_LIST
+};
+#undef OPTION
 
 /* draw context structure */
 struct DC {

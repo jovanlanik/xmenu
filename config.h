@@ -1,40 +1,21 @@
-static struct Config config = {
-	/* font, separate different fonts with comma */
-	.font = "monospace:size=9,DejaVuSansMono:size=9",
-
-	/* colors */
-	.background_color = "#FFFFFF",
-	.foreground_color = "#2E3436",
-	.selbackground_color = "#3584E4",
-	.selforeground_color = "#FFFFFF",
-	.separator_color = "#CDC7C2",
-	.border_color = "#E6E6E6",
-
-	/* sizes in pixels */
-	.width_pixels = 130,        /* minimum width of a menu */
-	.height_pixels = 25,        /* height of a single menu item */
-	.border_pixels = 1,         /* menu border */
-	.separator_pixels = 3,      /* space around separator */
-	.gap_pixels = 0,            /* gap between menus */
-
-	/* text alignment, set to LeftAlignment, CenterAlignment or RightAlignment */
-	.alignment = LeftAlignment,
-
-	/*
-	 * The variables below cannot be set by X resources.
-	 * Their values must be less than .height_pixels.
-	 */
-
-	/* geometry of the right-pointing isoceles triangle for submenus */
-	.triangle_width = 3,
-	.triangle_height = 7,
-
-	/* the icon size is equal to .height_pixels - .iconpadding * 2 */
-	.iconpadding = 2,
-
-	/* area around the icon, the triangle and the separator */
-	.horzpadding = 8,
-};
+#define OPTION_LIST \
+	OPTION(const char *, font, "monospace:size=9", GET_STRING) \
+	OPTION(const char *, background_color, "#FFFFFF", GET_STRING) \
+	OPTION(const char *, foreground_color, "#000000", GET_STRING) \
+	OPTION(const char *, selbackground_color, "#000000", GET_STRING) \
+	OPTION(const char *, selforeground_color, "#FFFFFF", GET_STRING) \
+	OPTION(const char *, separator_color, "#000000", GET_STRING) \
+	OPTION(const char *, border_color, "#000000", GET_STRING) \
+	OPTION(int, width_pixels, 124, GET_INT) \
+	OPTION(int, height_pixels, 24, GET_INT) \
+	OPTION(int, border_pixels, 1, GET_INT) \
+	OPTION(int, separator_pixels, 1, GET_INT) \
+	OPTION(int, gap_pixels, 0, GET_INT) \
+	OPTION(int, alignment, LeftAlignment, GET_ALIGN) \
+	OPTION(int, triangle_width, 4, GET_INT) \
+	OPTION(int, triangle_height, 8, GET_INT) \
+	OPTION(int, iconpadding, 4, GET_INT) \
+	OPTION(int, horzpadding, 4, GET_INT)
 
 /*
  * KEYBINDINGS

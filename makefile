@@ -1,23 +1,20 @@
 include config.mk
 
-bindir = ${DESTDIR}${PREFIX}
-mandir = ${DESTDIR}${MANPREFIX}
+bindir ?= $(DESTDIR)$(PREFIX)
+mandir ?= $(DESTDIR)$(MANPREFIX)
 
-SRCS = ${PROG}.c
-OBJS = ${SRCS:.c=.o}
+SRCS = $(PROG).c wip_fn.c wip_conf.c
+OBJS = $(SRCS:%.c=%.o)
 
-all: ${PROG}
+all: $(PROG)
 
-${PROG}: ${OBJS}
-	${CC} -o $@ ${OBJS} ${LDFLAGS}
+$(PROG) : $(OBJS)
+	$(CC) -o $@ $(OBJS) $(LDFLAGS)
 
-${OBJS}: config.h ${PROG}.h
-
-.c.o:
-	${CC} ${CFLAGS} -c $<
+$(PROG).c : config.h $(PROG).h
 
 clean:
-	-rm ${OBJS} ${PROG}
+	-rm $(OBJS) $(PROG)
 
 install: all
 	mkdir -p ${bindir}/bin

@@ -10,13 +10,13 @@
 #include <unistd.h>
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
-#include <X11/Xutil.h>
-#include <X11/Xresource.h>
 #include <X11/XKBlib.h>
 #include <X11/Xft/Xft.h>
 #include <X11/extensions/Xinerama.h>
 #include <Imlib2.h>
+
 #include "xmenu.h"
+#include "wip_conf.h"
 
 /* X stuff */
 static Display *dpy;
@@ -24,8 +24,6 @@ static int screen;
 static Visual *visual;
 static Window rootwin;
 static Colormap colormap;
-static XrmDatabase xdb;
-static char *xrm;
 static struct DC dc;
 static struct Monitor mon;
 static Atom utf8string;
@@ -39,9 +37,6 @@ static int rflag = 0;   /* whether to disable right-click */
 static int mflag = 0;   /* whether the user specified a monitor with -p */
 static int pflag = 0;   /* whether the user specified a position with -p */
 static int wflag = 0;   /* whether to let the window manager control XMenu */
-
-/* include config variable */
-#include "config.h"
 
 /* show usage */
 static void
@@ -91,49 +86,39 @@ error:
 	errx(1, "improper position: %s", optarg);
 }
 
-/* get configuration from X resources */
-static void
-getresources(void)
-{
-	char *type;
-	XrmValue xval;
+/* get configuration from wip_conf */
 
-	if (xrm == NULL || xdb == NULL)
-		return;
-
-	if (XrmGetResource(xdb, "xmenu.borderWidth", "*", &type, &xval) == True)
-		GETNUM(config.border_pixels, xval.addr)
-	if (XrmGetResource(xdb, "xmenu.separatorWidth", "*", &type, &xval) == True)
-		GETNUM(config.separator_pixels, xval.addr)
-	if (XrmGetResource(xdb, "xmenu.height", "*", &type, &xval) == True)
-		GETNUM(config.height_pixels, xval.addr)
-	if (XrmGetResource(xdb, "xmenu.width", "*", &type, &xval) == True)
-		GETNUM(config.width_pixels, xval.addr)
-	if (XrmGetResource(xdb, "xmenu.gap", "*", &type, &xval) == True)
-		GETNUM(config.gap_pixels, xval.addr)
-	if (XrmGetResource(xdb, "xmenu.background", "*", &type, &xval) == True)
-		config.background_color = xval.addr;
-	if (XrmGetResource(xdb, "xmenu.foreground", "*", &type, &xval) == True)
-		config.foreground_color = xval.addr;
-	if (XrmGetResource(xdb, "xmenu.selbackground", "*", &type, &xval) == True)
-		config.selbackground_color = xval.addr;
-	if (XrmGetResource(xdb, "xmenu.selforeground", "*", &type, &xval) == True)
-		config.selforeground_color = xval.addr;
-	if (XrmGetResource(xdb, "xmenu.separator", "*", &type, &xval) == True)
-		config.separator_color = xval.addr;
-	if (XrmGetResource(xdb, "xmenu.border", "*", &type, &xval) == True)
-		config.border_color = xval.addr;
-	if (XrmGetResource(xdb, "xmenu.font", "*", &type, &xval) == True)
-		config.font = xval.addr;
-	if (XrmGetResource(xdb, "xmenu.alignment", "*", &type, &xval) == True) {
-		if (strcasecmp(xval.addr, "center") == 0)
-			config.alignment = CenterAlignment;
-		else if (strcasecmp(xval.addr, "left") == 0)
-			config.alignment = LeftAlignment;
-		else if (strcasecmp(xval.addr, "right") == 0)
-			config.alignment = RightAlignment;
-	}
+#define GET_STRING(name) \
+{ \
+	const char *str = wip_getConfStr(XMENU_STR(name)); \
+	if(str) config.name = str; \
 }
+
+#define GET_INT(name) \
+{ \
+	int val = wip_getConfInt(XMENU_STR(name)); \
+	if(val != -1) config.name = val; \
+}
+
+#define GET_ALIGN(name) \
+{ \
+	int val = -1; \
+	const char *str = wip_getConfStr(XMENU_STR(name)); \
+	if(str) switch(str[0]) { \
+		case 'l': val = LeftAlignment; break; \
+		case 'r': val = RightAlignment; break; \
+		case 'c': val = CenterAlignment; break; \
+		default: fprintf(stderr, "%s is not a valid alignment. Try 'center', 'left' or 'right'.", str); \
+	} \
+	if(val != -1) config.name = val; \
+}
+
+#define OPTION(type, name, def, fn) fn(name)
+static void getwipconf(void)
+{
+	OPTION_LIST
+}
+#undef OPTION
 
 /* get configuration from command-line options */
 static char *
@@ -1483,14 +1468,14 @@ main(int argc, char *argv[])
 	visual = DefaultVisual(dpy, screen);
 	rootwin = RootWindow(dpy, screen);
 	colormap = DefaultColormap(dpy, screen);
-	XrmInitialize();
-	if ((xrm = XResourceManagerString(dpy)) != NULL)
-		xdb = XrmGetStringDatabase(xrm);
 	if ((xim = XOpenIM(dpy, NULL, NULL, NULL)) == NULL)
 		errx(1, "XOpenIM: could not open input device");
 
-	/* process configuration and window class */
-	getresources();
+	wip_initConf();
+
+	getwipconf();
+
+	/* process window class */
 	classh.res_class = PROGNAME;
 	classh.res_name = getoptions(argc, argv);
 
@@ -1528,7 +1513,7 @@ main(int argc, char *argv[])
 	ungrab();
 	cleanmenu(rootmenu);
 	cleandc();
-	XrmDestroyDatabase(xdb);
+	wip_termConf();
 	XCloseDisplay(dpy);
 
 	return 0;
