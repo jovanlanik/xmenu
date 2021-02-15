@@ -25,7 +25,7 @@ XMenu comes with the following features:
 * Submenus (some menu entries can spawn another menu).
 * Separators (menu entries can be separated by a line).
 * Icons (menu entries can be preceded by an icon image).
-* X resources support (you don't need to recompile xmenu for configuring it).
+* Config file support (you don't need to recompile xmenu for configuring it).
 * Multi-head (xmenu supports multiple monitors by using Xinerama).
 * Type-to-select (you can select an item by typing part of its name).
 
@@ -35,29 +35,29 @@ XMenu comes with the following features:
 The files are:
 
 * `./README`:     This file.
-* `./Makefile`:   The makefile.
+* `./makefile`:   The makefile.
 * `./config.h`:   The hardcoded default configuration for XMenu.
 * `./config.mk`:  The setup for the makefile.
 * `./demo.gif`:   A gif demonstrating how XMenu works.
 * `./xmenu.1`:    The manual file (man page) for XMenu.
 * `./xmenu.c`:    The source code of XMenu.
-* `./xmenu.sh`:   A sample script illustrating how to use XMenu.
+* `./example-menu.sh`:   A sample script illustrating how to use XMenu.
 * `./icons/`:     Icons for the sample script
+* `./wip_fn.c ./wip_fn.h ./wip_conf.c ./wip_conf.h`: Source for config loading using libconfig.
 
 
 ## Installation
 
 First, edit `./config.mk` to match your local setup.
 
-In order to build XMenu you need the `Imlib2`, `Xlib`, `Xinerama` and `Xft` header files.
-The default configuration for XMenu is specified in the file `config.h`,
-you can edit it, but most configuration can be changed at runtime via
-X resources.  Enter the following command to build XMenu.  This command
-creates the binary file `./xmenu`.
+In order to build XMenu you need the `Imlib2`, `Xlib`, `Xinerama`, `Xft` and `libconfig` header files.
+The default configuration for XMenu is specified in the file `config.h`, you can edit it,
+but most configuration can be changed at runtime via a config file at `~/.config/xmenu.conf`.
+Enter the following command to build XMenu.  This command creates the binary file `./xmenu`.
 
 	make
 
-By default, XMenu is installed into the `/usr/local` prefix.  Enter the
+By default, XMenu is installed into the `/usr` prefix.  Enter the
 following command to install XMenu (if necessary as root).  This command
 installs the binary file `./xmenu` into the `${PREFIX}/bin/` directory, and
 the manual file `./xmenu.1` into `${MANPREFIX}/man1/` directory.

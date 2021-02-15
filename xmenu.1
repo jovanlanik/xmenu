@@ -139,50 +139,50 @@ where typing a string will select the first item matching it.
 Additional key bindings can be set at compile time by changing the
 .B config.h
 file.
-.SH RESOURCES
+.SH OPTIONS
 .B
 xmenu
-understands the following X resources.
+reads these options from ~/.config/xmenu.conf
 .TP
-.B xmenu.font
+.B font
 The font in which the labels should be drawn.
 Multiple fonts can be added as fallback fonts;
 they must be separated by a comma.
 .TP
-.B xmenu.background
+.B background_color
 The background color of non-selected items in the menu.
 .TP
-.B xmenu.foreground
+.B foreground_color
 The color of the label text of non-selected items in the menu.
 .TP
-.B xmenu.selbackground
+.B selbackground_color
 The background color of selected items in the menu.
 .TP
-.B xmenu.selforeground
+.B selforeground_color
 The color of the label text of selected items in the menu.
 .TP
-.B xmenu.border
+.B border_color
 The color of the border around the menu.
 .TP
-.B xmenu.separator
+.B separator_pixels
 The color of the separator between items in the menu.
 .TP
-.B xmenu.gap
+.B gap_pixels
 The gap, in pixels, between the menus.
 .TP
-.B xmenu.width
+.B width_pixels
 The minimum width, in pixels, of the items in the menu.
 .TP
-.B xmenu.height
+.B height_pixels
 The size in pixels of the height of a single menu item.
 .TP
-.B xmenu.borderWidth
+.B border_pixels
 The size in pixels of the border around the menu.
 .TP
-.B xmenu.separatorWidth
+.B separator_pixels
 The size in pixels of the item separator.
 .TP
-.B xmenu.alignment
+.B alignment
 If set to
 .BR "\(dqleft\(dq" ,
 .BR "\(dqcenter\(dq" ,
