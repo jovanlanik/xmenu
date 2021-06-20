@@ -1,8 +1,8 @@
-<p align="center">
-  <img src="/demo.gif", title="demo"/>
-</p>
-
 # XMenu
+
+<p align="center">
+	<img src="https://user-images.githubusercontent.com/63266536/114306062-ffb67000-9ab0-11eb-9a10-be30eadc68b4.gif", title="demo"/>
+</p>
 
 XMenu is a menu utility for X.
 XMenu receives a menu specification in stdin, shows a menu for the user
@@ -82,7 +82,7 @@ Read the [manual](https://github.com/phillbush/xmenu/wiki) for more information 
 ## Acknowledgements
 
 * [thingmenu](https://github.com/singpolyma/thingmenu) for being the base
-  for xmenu's code.  However, xmenu evolved enough that it no longer resambles
+  for xmenu's code.  However, xmenu evolved enough that it no longer resembles
   thingmenu at all.
 * [dmenu](https://tools.suckless.org/dmenu/) for inspiring the stdin-to-stdout
   interface, and being base for drawing routines and input method code.
